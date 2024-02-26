@@ -208,6 +208,8 @@ func WithFatalLevel(ctx context.Context) context.Context {
 	return withLogLevel(ctx, zapcore.FatalLevel)
 }
 
+func Print(args ...interface{})                       { Info(args...) }
+func Printf(template string, args ...interface{})     { Infof(template, args...) }
 func Debug(args ...interface{})                       { S().Debug(args...) }
 func Debugf(template string, args ...interface{})     { S().Debugf(template, args...) }
 func Debugw(msg string, keysAndValues ...interface{}) { S().Debugw(msg, keysAndValues...) }
