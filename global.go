@@ -24,46 +24,46 @@ type ctxLogKeyType struct{}
 
 var CtxLogKey = ctxLogKeyType{}
 
-// Debug logs a message at DebugLevel. The message includes any fields passed
-// at the log site, as well as any fields accumulated on the logger.
-func Debug(msg string, fields ...zap.Field) {
-	L().Debug(msg, fields...)
-}
+//// Debug logs a message at DebugLevel. The message includes any fields passed
+//// at the log site, as well as any fields accumulated on the logger.
+//func Debug(msg string, fields ...zap.Field) {
+//	L().Debug(msg, fields...)
+//}
 
-// Info logs a message at InfoLevel. The message includes any fields passed
-// at the log site, as well as any fields accumulated on the logger.
-func Info(msg string, fields ...zap.Field) {
-	L().Info(msg, fields...)
-}
+//// Info logs a message at InfoLevel. The message includes any fields passed
+//// at the log site, as well as any fields accumulated on the logger.
+//func Info(msg string, fields ...zap.Field) {
+//	L().Info(msg, fields...)
+//}
 
-// Warn logs a message at WarnLevel. The message includes any fields passed
-// at the log site, as well as any fields accumulated on the logger.
-func Warn(msg string, fields ...zap.Field) {
-	L().Warn(msg, fields...)
-}
+//// Warn logs a message at WarnLevel. The message includes any fields passed
+//// at the log site, as well as any fields accumulated on the logger.
+//func Warn(msg string, fields ...zap.Field) {
+//	L().Warn(msg, fields...)
+//}
 
-// Error logs a message at ErrorLevel. The message includes any fields passed
-// at the log site, as well as any fields accumulated on the logger.
-func Error(msg string, fields ...zap.Field) {
-	L().Error(msg, fields...)
-}
+//// Error logs a message at ErrorLevel. The message includes any fields passed
+//// at the log site, as well as any fields accumulated on the logger.
+//func Error(msg string, fields ...zap.Field) {
+//	L().Error(msg, fields...)
+//}
 
-// Panic logs a message at PanicLevel. The message includes any fields passed
-// at the log site, as well as any fields accumulated on the logger.
-//
-// The logger then panics, even if logging at PanicLevel is disabled.
-func Panic(msg string, fields ...zap.Field) {
-	L().Panic(msg, fields...)
-}
+//// Panic logs a message at PanicLevel. The message includes any fields passed
+//// at the log site, as well as any fields accumulated on the logger.
+////
+//// The logger then panics, even if logging at PanicLevel is disabled.
+//func Panic(msg string, fields ...zap.Field) {
+//	L().Panic(msg, fields...)
+//}
 
-// Fatal logs a message at FatalLevel. The message includes any fields passed
-// at the log site, as well as any fields accumulated on the logger.
-//
-// The logger then calls os.Exit(1), even if logging at FatalLevel is
-// disabled.
-func Fatal(msg string, fields ...zap.Field) {
-	L().Fatal(msg, fields...)
-}
+//// Fatal logs a message at FatalLevel. The message includes any fields passed
+//// at the log site, as well as any fields accumulated on the logger.
+////
+//// The logger then calls os.Exit(1), even if logging at FatalLevel is
+//// disabled.
+//func Fatal(msg string, fields ...zap.Field) {
+//	L().Fatal(msg, fields...)
+//}
 
 // RatedDebug print logs at debug level
 // it limit log print to avoid too many logs
@@ -207,3 +207,24 @@ func WithErrorLevel(ctx context.Context) context.Context {
 func WithFatalLevel(ctx context.Context) context.Context {
 	return withLogLevel(ctx, zapcore.FatalLevel)
 }
+
+func Print(args ...interface{})                       { Info(args...) }
+func Printf(template string, args ...interface{})     { Infof(template, args...) }
+func Debug(args ...interface{})                       { S().Debug(args...) }
+func Debugf(template string, args ...interface{})     { S().Debugf(template, args...) }
+func Debugw(msg string, keysAndValues ...interface{}) { S().Debugw(msg, keysAndValues...) }
+func Info(args ...interface{})                        { S().Info(args...) }
+func Infof(template string, args ...interface{})      { S().Infof(template, args...) }
+func Infow(msg string, keysAndValues ...interface{})  { S().Infow(msg, keysAndValues...) }
+func Warn(args ...interface{})                        { S().Warn(args...) }
+func Warnf(template string, args ...interface{})      { S().Warnf(template, args...) }
+func Warnw(msg string, keysAndValues ...interface{})  { S().Warnw(msg, keysAndValues...) }
+func Error(args ...interface{})                       { S().Error(args...) }
+func Errorf(template string, args ...interface{})     { S().Errorf(template, args...) }
+func Errorw(msg string, keysAndValues ...interface{}) { S().Errorw(msg, keysAndValues...) }
+func Panic(args ...interface{})                       { S().Panic(args...) }
+func Panicf(template string, args ...interface{})     { S().Panicf(template, args...) }
+func Panicw(msg string, keysAndValues ...interface{}) { S().Panicw(msg, keysAndValues...) }
+func Fatal(args ...interface{})                       { S().Fatal(args...) }
+func Fatalf(template string, args ...interface{})     { S().Fatalf(template, args...) }
+func Fatalw(msg string, keysAndValues ...interface{}) { S().Fatalw(msg, keysAndValues...) }

@@ -119,12 +119,12 @@ func NewTextEncoder(encoderConfig *zapcore.EncoderConfig, spaced bool, disableEr
 func NewTextEncoderByConfig(cfg *Config) zapcore.Encoder {
 	cc := zapcore.EncoderConfig{
 		// Keys can be anything except the empty string.
-		TimeKey:        "time",
-		LevelKey:       "level",
-		NameKey:        "name",
-		CallerKey:      "caller",
-		MessageKey:     "message",
-		StacktraceKey:  "stack",
+		TimeKey:        getDefault(cfg.Encoder.TimeKey, "time"),
+		LevelKey:       getDefault(cfg.Encoder.LevelKey, "level"),
+		NameKey:        getDefault(cfg.Encoder.NameKey, "name"),
+		CallerKey:      getDefault(cfg.Encoder.CallerKey, "caller"),
+		MessageKey:     getDefault(cfg.Encoder.MessageKey, "message"),
+		StacktraceKey:  getDefault(cfg.Encoder.StacktraceKey, "stack"),
 		LineEnding:     zapcore.DefaultLineEnding,
 		EncodeLevel:    zapcore.CapitalLevelEncoder,
 		EncodeTime:     DefaultTimeEncoder,
@@ -134,6 +134,17 @@ func NewTextEncoderByConfig(cfg *Config) zapcore.Encoder {
 	if cfg.DisableTimestamp {
 		cc.TimeKey = ""
 	}
+
+	if cfg.Encoder.EncodeLevel != nil {
+		cc.EncodeLevel = cfg.Encoder.EncodeLevel
+	}
+	if cfg.Encoder.EncodeTime != nil {
+		cc.EncodeTime = cfg.Encoder.EncodeTime
+	}
+	if cfg.Encoder.EncodeCaller != nil {
+		cc.EncodeCaller = cfg.Encoder.EncodeCaller
+	}
+
 	switch cfg.Format {
 	case "text", "":
 		return &textEncoder{
@@ -147,6 +158,13 @@ func NewTextEncoderByConfig(cfg *Config) zapcore.Encoder {
 	default:
 		panic(fmt.Sprintf("unsupport log format: %s", cfg.Format))
 	}
+}
+
+func getDefault(value, defaultValue string) string {
+	if value != "" {
+		return value
+	}
+	return defaultValue
 }
 
 func (enc *textEncoder) AddArray(key string, arr zapcore.ArrayMarshaler) error {
