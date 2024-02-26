@@ -1,6 +1,6 @@
 module github.com/magicedy/log
 
-go 1.22.0
+go 1.19
 
 require (
 	github.com/cockroachdb/errors v1.11.1
