@@ -15,6 +15,8 @@ package log
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -208,7 +210,12 @@ func WithFatalLevel(ctx context.Context) context.Context {
 	return withLogLevel(ctx, zapcore.FatalLevel)
 }
 
-func Print(args ...interface{})                       { S().Info(args...) }
+func Print(args ...interface{}) { S().Info(args...) }
+func Println(args ...interface{}) {
+	message := fmt.Sprintln(args...)
+	message = strings.TrimSuffix(message, "\n")
+	S().Info(message)
+}
 func Printf(template string, args ...interface{})     { S().Infof(template, args...) }
 func Debug(args ...interface{})                       { S().Debug(args...) }
 func Debugf(template string, args ...interface{})     { S().Debugf(template, args...) }
@@ -223,8 +230,18 @@ func Error(args ...interface{})                       { S().Error(args...) }
 func Errorf(template string, args ...interface{})     { S().Errorf(template, args...) }
 func Errorw(msg string, keysAndValues ...interface{}) { S().Errorw(msg, keysAndValues...) }
 func Panic(args ...interface{})                       { S().Panic(args...) }
+func Panicln(args ...interface{}) {
+	message := fmt.Sprintln(args...)
+	message = strings.TrimSuffix(message, "\n")
+	S().Panic(message)
+}
 func Panicf(template string, args ...interface{})     { S().Panicf(template, args...) }
 func Panicw(msg string, keysAndValues ...interface{}) { S().Panicw(msg, keysAndValues...) }
 func Fatal(args ...interface{})                       { S().Fatal(args...) }
+func Fatalln(args ...interface{}) {
+	message := fmt.Sprintln(args...)
+	message = strings.TrimSuffix(message, "\n")
+	S().Fatal(message)
+}
 func Fatalf(template string, args ...interface{})     { S().Fatalf(template, args...) }
 func Fatalw(msg string, keysAndValues ...interface{}) { S().Fatalw(msg, keysAndValues...) }
