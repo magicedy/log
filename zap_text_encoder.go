@@ -37,6 +37,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"math"
+	"strings"
 	"sync"
 	"time"
 	"unicode/utf8"
@@ -48,7 +49,8 @@ import (
 
 // DefaultTimeEncoder serializes time.Time to a human-readable formatted string
 func DefaultTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-	s := t.Format("2006/01/02 15:04:05.000 -07:00")
+	//s := t.Format("2006/01/02 15:04:05.000 -07:00")
+	s := t.Format("2006-01-02 15:04:05")
 	if e, ok := enc.(*textEncoder); ok {
 		for _, c := range []byte(s) {
 			e.buf.AppendByte(c)
@@ -61,6 +63,17 @@ func DefaultTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 // ShortCallerEncoder serializes a caller in file:line format.
 func ShortCallerEncoder(caller zapcore.EntryCaller, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString(caller.TrimmedPath())
+}
+
+func RelativeCallerEncoder(caller zapcore.EntryCaller, enc zapcore.PrimitiveArrayEncoder) {
+	fullPath := caller.TrimmedPath()
+	parts := strings.Split(fullPath, "/")
+	if len(parts) > 1 {
+		trimmedPath := strings.Join(parts[1:], "/")
+		enc.AppendString(trimmedPath)
+	} else {
+		enc.AppendString(fullPath)
+	}
 }
 
 // For JSON-escaping; see textEncoder.safeAddString below.
@@ -123,13 +136,13 @@ func NewTextEncoderByConfig(cfg *Config) zapcore.Encoder {
 		LevelKey:       getDefault(cfg.Encoder.LevelKey, "level"),
 		NameKey:        getDefault(cfg.Encoder.NameKey, "name"),
 		CallerKey:      getDefault(cfg.Encoder.CallerKey, "caller"),
-		MessageKey:     getDefault(cfg.Encoder.MessageKey, "message"),
+		MessageKey:     getDefault(cfg.Encoder.MessageKey, "msg"),
 		StacktraceKey:  getDefault(cfg.Encoder.StacktraceKey, "stack"),
 		LineEnding:     zapcore.DefaultLineEnding,
 		EncodeLevel:    zapcore.CapitalLevelEncoder,
 		EncodeTime:     DefaultTimeEncoder,
 		EncodeDuration: zapcore.StringDurationEncoder,
-		EncodeCaller:   ShortCallerEncoder,
+		EncodeCaller:   RelativeCallerEncoder,
 	}
 	if cfg.DisableTimestamp {
 		cc.TimeKey = ""
