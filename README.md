@@ -35,7 +35,7 @@ func setupLogger() {
 func main() {
 	setupLogger()
 
-    log.Print("this is info message")
+	log.Print("this is info message")
 	log.Println("Hello", "World")
 	log.Debug("this is debug message")
 	log.Info("this is info message")
